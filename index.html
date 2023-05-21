@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <style>
+        /* Add CSS styling for the chat interface */
+        /* Example styles, you can customize it further */
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .chatbox {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+
+        .user-message {
+            background-color: #F0F0F0;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .bot-message {
+            background-color: #DCF8C6;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .input-group input[type="text"] {
+            flex: 1;
+            padding: 5px;
+        }
+
+        .input-group input[type="submit"] {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chatbot</h1>
+        <div class="chatbox">
+            <!-- Messages will be appended here -->
+        </div>
+        <form id="chat-form" action="/" method="post" onsubmit="submitForm(event)">
+            <div class="input-group">
+                <input type="text" name="command" id="command-input" placeholder="Enter a command" autocomplete="off" required>
+                <input type="submit" value="Send">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript code for submitting the form and displaying messages
+
+        function submitForm(event) {
+            event.preventDefault();
+            const form = document.getElementById('chat-form');
+            const input = document.getElementById('command-input');
+            const chatbox = document.querySelector('.chatbox');
+
+            // Create user message element
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('user-message');
+            userMessage.textContent = input.value;
+            chatbox.appendChild(userMessage);
+
+            // Send the form data using fetch
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form)
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Create bot message element
+                const botMessage = document.createElement('div');
+                botMessage.classList.add('bot-message');
+                botMessage.textContent = data;
+                chatbox.appendChild(botMessage);
+            })
+            .catch(error => console.error('Error:', error));
+
+            // Clear the input field
+            input.value = '';
+        }
+    </script>
+</body>
+</html>
